@@ -72,4 +72,37 @@ describe('CivicReport API', () => {
     const missing = await request(app).patch('/api/reports/99/status').send({ status: 'resolved' });
     expect(missing.status).toBe(404);
   });
+
+  it('sets security headers and hides x-powered-by', async () => {
+    const res = await request(createApp()).get('/api/health');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-frame-options']).toBe('DENY');
+    expect(res.headers['content-security-policy']).toContain("default-src 'self'");
+    expect(res.headers['x-powered-by']).toBeUndefined();
+  });
+
+  it('returns JSON 400 for malformed JSON body, no stack trace', async () => {
+    const res = await request(createApp())
+      .post('/api/reports')
+      .set('content-type', 'application/json')
+      .send('{not json');
+    expect(res.status).toBe(400);
+    expect(res.body.errors[0].message).toBe('Invalid request body');
+  });
+
+  it('returns JSON 404 for unknown API routes', async () => {
+    const res = await request(createApp()).get('/api/nope');
+    expect(res.status).toBe(404);
+    expect(res.body.errors).toBeDefined();
+  });
+
+  it('rate limits after 100 requests per minute per IP', async () => {
+    const app = createApp();
+    for (let i = 0; i < 100; i++) {
+      const res = await request(app).get('/api/health');
+      expect(res.status).toBe(200);
+    }
+    const limited = await request(app).get('/api/health');
+    expect(limited.status).toBe(429);
+  });
 });

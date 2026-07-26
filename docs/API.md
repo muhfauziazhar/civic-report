@@ -54,3 +54,11 @@ Body: `{ "status": "open" | "in_progress" | "resolved" }`
 - `200` → updated report
 - `400` → invalid status value
 - `404` → unknown id
+
+## Cross-cutting behavior
+
+- **Rate limiting**: 100 requests/min per IP on `/api/*` → `429` with the standard error shape.
+- **Body limit**: JSON bodies over 50 kB → `413`. Malformed JSON → `400 { "errors": [{ "field": "request", "message": "Invalid request body" }] }`.
+- **Unknown `/api/*` route** → `404` JSON (never the SPA fallback).
+- **Security headers** on every response: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Content-Security-Policy` (self-only).
+- **5xx** responses are generic JSON; stack traces are logged server-side only.

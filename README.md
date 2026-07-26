@@ -26,7 +26,7 @@ Citizens report local issues (potholes, broken street lights, waste problems); s
           ├─ report-flow      full user journeys incl. keyboard-only
           └─ accessibility    Axe scans of default / error / success states
         web/src/**/*.test.tsx 4 component tests (form validation UX, focus management)
-        server/test/          16 unit + integration tests (validation, store, HTTP API)
+        server/test/          20 unit + integration tests (validation, store, HTTP API, hardening)
 ```
 
 Run everything:
@@ -65,6 +65,15 @@ docker run -p 3001:3001 civic-report   # serves API + built frontend
 - [API specification](docs/API.md)
 - [Architecture & decisions](docs/ARCHITECTURE.md)
 
+## Production hardening
+
+- Security headers (CSP self-only, `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`), `x-powered-by` disabled.
+- Per-IP rate limit (100 req/min on `/api`), 50 kB JSON body limit.
+- JSON error handler — malformed bodies and 5xx never leak stack traces; unknown `/api` routes return JSON 404.
+- Graceful shutdown on SIGTERM/SIGINT (drain, then 10s hard deadline).
+- Structured one-line request logs (method, path, status, duration).
+- Docker `HEALTHCHECK` against `/api/health`, non-root `USER node`.
+
 ## Deliberate scope cuts
 
-In-memory store (no DB), no auth, no pagination — the focus of this showcase is testing culture, a11y, and delivery pipeline. Each cut is marked in code with a `ponytail:` comment naming the upgrade path.
+In-memory store (no DB), no auth, no pagination, in-process rate limiter (single instance) — the focus of this showcase is testing culture, a11y, and delivery pipeline. Each cut is marked in code with a `ponytail:` comment naming the upgrade path.
