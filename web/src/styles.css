@@ -1,0 +1,138 @@
+/* Accessible-by-default styles: 4.5:1 contrast, visible focus, 44px targets */
+:root {
+  --ink: #0b0c0c;
+  --blue: #1d4ed8;
+  --red: #b91c1c;
+  --green: #166534;
+  --border: #505a5f;
+  --focus: #ffdd00;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  padding: 0.5rem 1rem;
+  background: var(--focus);
+  color: var(--ink);
+}
+.skip-link:focus {
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+
+header.site {
+  background: var(--ink);
+  color: #fff;
+  padding: 0.75rem 1rem;
+}
+header.site strong { font-size: 1.25rem; }
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+a { color: var(--blue); }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+  box-shadow: 0 0 0 5px var(--ink) inset;
+}
+
+label, legend {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.hint {
+  color: #3f4548;
+  margin: 0 0 0.5rem;
+}
+
+input[type='text'],
+select,
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 2px solid var(--ink);
+}
+
+.field { margin-bottom: 1.25rem; }
+
+.field--error input,
+.field--error select,
+.field--error textarea {
+  border-color: var(--red);
+}
+
+.field-error {
+  color: var(--red);
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.error-summary {
+  border: 4px solid var(--red);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+.error-summary h2 { margin-top: 0; }
+.error-summary a { color: var(--red); font-weight: 600; }
+
+button {
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  background: var(--green);
+  color: #fff;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+button:hover { background: #14532d; }
+
+.success-banner {
+  border: 4px solid var(--green);
+  color: var(--green);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+caption {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  font-weight: 600;
+}
+.tag--open { background: #fef3c7; color: #78350f; }
+.tag--in_progress { background: #dbeafe; color: #1e3a8a; }
+.tag--resolved { background: #dcfce7; color: var(--green); }
