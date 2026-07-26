@@ -1,5 +1,7 @@
 # CivicReport — Accessible Public Issue Reporting Portal
 
+[![CI](https://github.com/muhfauziazhar/civic-report/actions/workflows/ci.yml/badge.svg)](https://github.com/muhfauziazhar/civic-report/actions/workflows/ci.yml)
+
 A small but production-shaped full stack app built to demonstrate **test-first engineering** and **accessibility (WCAG 2.2 AA)** for public-sector web applications.
 
 Citizens report local issues (potholes, broken street lights, waste problems); staff track status. The interesting part is not the feature set — it's how quality is engineered into every layer.
