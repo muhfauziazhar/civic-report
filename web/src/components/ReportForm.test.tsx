@@ -68,7 +68,11 @@ describe('ReportForm', () => {
     render(<ReportForm onCreated={vi.fn()} />);
     await userEvent.click(screen.getByRole('button', { name: 'Submit report' }));
 
-    await userEvent.click(await screen.findByRole('link', { name: 'Enter a short title for the issue' }));
+    // wait for the rAF-driven summary focus first, otherwise it races the link click
+    const summary = await screen.findByRole('alert');
+    await waitFor(() => expect(summary).toHaveFocus());
+
+    await userEvent.click(screen.getByRole('link', { name: 'Enter a short title for the issue' }));
     expect(screen.getByLabelText('Issue title')).toHaveFocus();
   });
 
